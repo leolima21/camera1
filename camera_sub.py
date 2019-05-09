@@ -3,8 +3,11 @@
 # Bibliotecas necessarias
 import rospy
 import cv2
+import sys
+#import roslib
+#roslib.load_manifest('my_package')
 import time
-import cv_bridge
+from cv_bridge import CvBridge, CvBridgeError
 import numpy as np
 from std_msgs.msg import String
 from std_msgs.msg import Int32
@@ -13,21 +16,19 @@ from sensor_msgs.msg import Image
 
 # Funcao q ira executar o movimento do robo
 def callback(data):
-    # Criação do objeto da imagem
-    ros_ret, ros_frame = data.data
+    # Criacao do objeto da imagem
+    #ros_frame = data.data
 
     # Criacao do objeto de convercao
-    #bridge = CvBridge()
+    bridge = CvBridge()
 
     # Converter a imagem ros para imagem cv2
-    cv2_ret, cv2_frame = bridge.imgmsg_to_cv2(ros_frame, "bgr8")
+    cv2_frame = bridge.imgmsg_to_cv2(data, "bgr8")
 
     # Exibir a imagem em uma janela
     cv2.imshow('frame', cv2_frame)
 
-    # Fechar a janela pressionando a tecla 'q'
-	if cv2.waitKey(1) == ord('q'):
-		break
+    cv2.waitKey(1)        
 
 
 def listener():
