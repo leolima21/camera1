@@ -4,7 +4,7 @@
 import rospy
 import cv2
 import time
-import cv_bridge
+from cv_bridge import CvBridge, CvBridgeError
 import numpy as np
 from std_msgs.msg import String
 from std_msgs.msg import Int32
@@ -19,6 +19,9 @@ def talker():
     # Inicio do node teleop_pub
     rospy.init_node('camera_pub', anonymous=True)
 
+    bridge = CvBridge()
+
+
     # Setup da camera 
     cap = cv2.VideoCapture(0)
 
@@ -27,14 +30,14 @@ def talker():
         ret, cv2_frame = cap.read()
 
         # Converter a img cv2 em img ROS
-        ros_frame = cv2_to_imgmsg(cv2_frame, "bgr8")
+        ros_frame = bridge.cv2_to_imgmsg(cv2_frame, "bgr8")
     
         # Publicacao da img no topico
         rospy.loginfo(ros_frame)    
         pub.publish(ros_frame)
 
         # Esperar algum tempo para a proxima publicacao
-        #time.sleep(2)
+        #time.sleep(0.066)
 
 
 # Funcao main
